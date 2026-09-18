@@ -24,7 +24,3 @@ quiz-app/
 └── docs/
     └── ARCHITECTURE.md
 ```
-
-## License
-
-Personal/portfolio project — no license applied yet.
