@@ -12,6 +12,7 @@ This document defines the system design for Quiz App: role model, authentication
 
 There is no separate authenticated "participant" account — quiz-taking is intentionally frictionless and unauthenticated by design, scoped entirely by possession of a valid link token.
 
+## HEAD
 Admin self-registration requires `super_admin` approval before activation. Until an approval endpoint exists, a pre-approved `super_admin` account is provisioned out-of-band via a database seeder.
 
 ## 2. Authentication
@@ -21,8 +22,6 @@ Admin self-registration requires `super_admin` approval before activation. Until
   - `POST /api/admin/login`
   - `POST /api/admin/logout`
   - `GET /api/me` — returns the authenticated admin/super_admin profile.
-  - Super admin accounts are provisioned out-of-band (seeder/artisan command), not via public registration.
-- **Guests:** unauthenticated. The only session artifact is a UUID `attempt_id` issued at quiz start, used exclusively to submit answers and retrieve the result for that attempt.
 
 ## 3. Authorization
 
@@ -130,7 +129,10 @@ quiz_attempt_answer_options
 POST /api/admin/register
 POST /api/admin/login
 POST /api/admin/logout
+<<<<<<< HEAD
 GET  /api/me
+=======
+>>>>>>> 065dfe17650d6eba506255594a1da8a281a13762
 ```
 
 ### Question bank

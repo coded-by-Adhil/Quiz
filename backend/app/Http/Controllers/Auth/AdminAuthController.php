@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class AdminAuthController extends Controller
 {
@@ -16,18 +18,52 @@ class AdminAuthController extends Controller
     {
         $validated = $request->validated();
 
+        Log::info('Admin registration validation passed', [
+            'email' => $validated['email'],
+            'validated_keys' => array_keys($validated),
+        ]);
+
         $user = new User();
         $user->name = $validated['name'];
         $user->email = $validated['email'];
         $user->password = Hash::make($validated['password']);
         $user->role = 'admin';
         $user->is_approved = false;
-        $user->save();
 
-        return response()->json([
+        Log::info('Admin registration database write attempt', [
+            'email' => $user->email,
+            'role' => $user->role,
+            'is_approved' => $user->is_approved,
+        ]);
+
+        try {
+            $user->save();
+        } catch (Throwable $exception) {
+            Log::error('Admin registration database write failed', [
+                'email' => $user->email,
+                'exception' => $exception,
+            ]);
+
+            throw $exception;
+        }
+
+        Log::info('Admin registration database write succeeded', [
+            'user_id' => $user->id,
+            'email' => $user->email,
+        ]);
+
+        $response = response()->json([
             'message' => 'registration submitted, account pending approval',
             'user' => $this->profilePayload($user),
         ], 201);
+
+        Log::info('Admin registration response sent', [
+            'user_id' => $user->id,
+            'email' => $user->email,
+            'response_status' => 201,
+        ]);
+
+        return $response;
     }
 
     public function login(LoginAdminRequest $request): JsonResponse
