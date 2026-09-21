@@ -2,31 +2,14 @@
 
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Support\Facades\Log;
 
 class RegisterAdminRequest extends FormRequest
 {
     public function authorize(): bool
     {
         return true;
-    }
-
-    protected function prepareForValidation(): void
-    {
-        Log::info('Admin registration request received', [
-            'method' => $this->method(),
-            'path' => $this->path(),
-            'email' => $this->input('email'),
-            'input_keys' => array_keys($this->except([
-                'password',
-                'password_confirmation',
-            ])),
-        ]);
-
-        Log::info('Admin registration validation started');
     }
 
     /**
@@ -41,14 +24,4 @@ class RegisterAdminRequest extends FormRequest
         ];
     }
 
-    protected function failedValidation(Validator $validator)
-    {
-        Log::error('Admin registration validation failed', [
-            'email' => $this->input('email'),
-            'errors' => $validator->errors()->toArray(),
-            'response_status' => 422,
-        ]);
-
-        parent::failedValidation($validator);
-    }
 }
