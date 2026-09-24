@@ -23,4 +23,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/admin/questions/{question}', [QuestionController::class, 'update']);
     Route::delete('/admin/questions/{question}', [QuestionController::class, 'destroy']);
 });
-

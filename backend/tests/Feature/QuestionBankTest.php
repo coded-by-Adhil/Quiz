@@ -176,6 +176,13 @@ class QuestionBankTest extends TestCase
             ->assertUnauthorized();
     }
 
+    public function test_api_unauthenticated_response_is_json_without_an_accept_header(): void
+    {
+        $this->get('/api/admin/questions')
+            ->assertUnauthorized()
+            ->assertJson(['message' => 'Unauthenticated.']);
+    }
+
     public function test_admin_can_update_a_question_and_replace_its_options(): void
     {
         $admin = $this->authenticateAsAdmin();
