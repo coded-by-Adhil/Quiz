@@ -129,10 +129,7 @@ quiz_attempt_answer_options
 POST /api/admin/register
 POST /api/admin/login
 POST /api/admin/logout
-<<<<<<< HEAD
 GET  /api/me
-=======
->>>>>>> 065dfe17650d6eba506255594a1da8a281a13762
 ```
 
 ### Question bank
