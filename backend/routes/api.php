@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuizController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/ping', function () {
@@ -22,4 +23,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/admin/questions/{question}', [QuestionController::class, 'show']);
     Route::put('/admin/questions/{question}', [QuestionController::class, 'update']);
     Route::delete('/admin/questions/{question}', [QuestionController::class, 'destroy']);
+
+    Route::get('/admin/quizzes', [QuizController::class, 'index']);
+    Route::post('/admin/quizzes', [QuizController::class, 'store']);
+    Route::get('/admin/quizzes/{quiz}', [QuizController::class, 'show']);
+    Route::put('/admin/quizzes/{quiz}', [QuizController::class, 'update']);
+    Route::delete('/admin/quizzes/{quiz}', [QuizController::class, 'destroy']);
+    Route::post('/admin/quizzes/{quiz}/questions', [QuizController::class, 'syncQuestions']);
 });
