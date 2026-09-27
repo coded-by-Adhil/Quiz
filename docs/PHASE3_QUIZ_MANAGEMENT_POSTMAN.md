@@ -62,7 +62,7 @@ Body:
 
 Expected: **201**. Save the returned `id` as `quiz_id`. The response should contain `owner_id` equal to the logged-in admin ID and an empty `questions` array. Do not send `owner_id`; the API derives it from the token.
 
-## 3. Create an untimed quiz
+## 3. Create a quiz with no duration
 
 **POST** `{{base_url}}/api/admin/quizzes`
 
@@ -71,18 +71,44 @@ Body:
 ```json
 {
   "title": "Untimed Quiz",
-  "description": null,
+  "description": "A quiz without a server-side duration",
   "duration_minutes": null
 }
 ```
 
-Expected: **201**. Both nullable fields should be `null` in the response.
+Expected: **201**. The description is required during creation, while `duration_minutes` may be `null`.
 
 ## 4. List your quizzes
 
 **GET** `{{base_url}}/api/admin/quizzes`
 
 Expected: **200**. Only quizzes owned by the logged-in admin appear. Soft-deleted quizzes and another admin's quizzes do not appear.
+
+## 4A. Quiz creation validation
+
+**POST** `{{base_url}}/api/admin/quizzes`
+
+Missing title:
+
+```json
+{
+  "description": "Description without a title",
+  "duration_minutes": 20
+}
+```
+
+Expected: **422** with a clear validation error for `title`.
+
+Missing description:
+
+```json
+{
+  "title": "Title without a description",
+  "duration_minutes": 20
+}
+```
+
+Expected: **422** with a clear validation error for `description`.
 
 ## 5. View one quiz
 

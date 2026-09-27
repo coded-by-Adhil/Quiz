@@ -44,21 +44,44 @@ class QuizManagementTest extends TestCase
         $this->assertDatabaseCount('quiz_questions', 0);
     }
 
-    public function test_quiz_description_and_duration_can_be_null(): void
+    public function test_quiz_duration_can_be_null_when_description_is_present(): void
     {
         $admin = $this->authenticateAsAdmin();
 
         $this->postJson('/api/admin/quizzes', [
             'title' => 'Untimed quiz',
-            'description' => null,
+            'description' => 'An untimed quiz',
             'duration_minutes' => null,
         ])->assertCreated();
 
         $this->assertDatabaseHas('quizzes', [
             'owner_id' => $admin->id,
-            'description' => null,
+            'description' => 'An untimed quiz',
             'duration_minutes' => null,
         ]);
+    }
+
+    public function test_quiz_creation_requires_title_and_description(): void
+    {
+        $this->authenticateAsAdmin();
+
+        $this->postJson('/api/admin/quizzes', [
+            'description' => 'Description without a title',
+            'duration_minutes' => 10,
+        ])->assertUnprocessable()
+            ->assertJsonValidationErrors('title');
+
+        $this->postJson('/api/admin/quizzes', [
+            'title' => 'Title without a description',
+            'duration_minutes' => 10,
+        ])->assertUnprocessable()
+            ->assertJsonValidationErrors('description');
+
+        $this->postJson('/api/admin/quizzes', [
+            'title' => 'Complete quiz',
+            'description' => 'Complete description',
+            'duration_minutes' => 10,
+        ])->assertCreated();
     }
 
     public function test_quiz_fields_are_validated(): void
@@ -89,7 +112,10 @@ class QuizManagementTest extends TestCase
         Sanctum::actingAs($superAdmin);
 
         $this->getJson('/api/admin/quizzes')->assertForbidden();
-        $this->postJson('/api/admin/quizzes', ['title' => 'Blocked'])->assertForbidden();
+        $this->postJson('/api/admin/quizzes', [
+            'title' => 'Blocked',
+            'description' => 'Valid payload for authorization test',
+        ])->assertForbidden();
     }
 
     public function test_admin_can_list_only_their_non_deleted_quizzes(): void
