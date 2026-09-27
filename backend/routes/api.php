@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizLinkController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/ping', function () {
@@ -30,4 +31,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/admin/quizzes/{quiz}', [QuizController::class, 'update']);
     Route::delete('/admin/quizzes/{quiz}', [QuizController::class, 'destroy']);
     Route::post('/admin/quizzes/{quiz}/questions', [QuizController::class, 'syncQuestions']);
+
+    Route::post('/admin/quizzes/{quiz}/links', [QuizLinkController::class, 'store']);
+    Route::get('/admin/quizzes/{quiz}/links', [QuizLinkController::class, 'index']);
+    Route::patch('/admin/links/{link}', [QuizLinkController::class, 'toggleActive']);
 });

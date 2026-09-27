@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Models\Question;
 use App\Models\Quiz;
+use App\Models\QuizLink;
 use App\Policies\QuestionPolicy;
 use App\Policies\QuizPolicy;
+use App\Policies\QuizLinkPolicy;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(Question::class, QuestionPolicy::class);
         Gate::policy(Quiz::class, QuizPolicy::class);
+        Gate::policy(QuizLink::class, QuizLinkPolicy::class);
     }
 }
