@@ -22,6 +22,11 @@ class QuizPolicy
         return $this->ownsQuiz($user, $quiz);
     }
 
+    public function viewAttempts(User $user, Quiz $quiz): bool
+    {
+        return $this->ownsQuiz($user, $quiz);
+    }
+
     public function update(User $user, Quiz $quiz): bool
     {
         return $this->ownsQuiz($user, $quiz);

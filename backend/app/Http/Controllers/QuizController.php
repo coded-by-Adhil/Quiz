@@ -2,26 +2,72 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Quiz\AdminQuizAttemptsRequest;
+use App\Http\Requests\Quiz\AdminQuizIndexRequest;
 use App\Http\Requests\Quiz\StoreQuizRequest;
 use App\Http\Requests\Quiz\SyncQuizQuestionsRequest;
 use App\Http\Requests\Quiz\UpdateQuizRequest;
+use App\Http\Resources\Admin\AdminQuizAttemptResource;
+use App\Http\Resources\Admin\AdminQuizResource;
 use App\Models\Quiz;
+use App\Models\QuizAttempt;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class QuizController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(AdminQuizIndexRequest $request): JsonResponse
     {
         $this->authorize('viewAny', Quiz::class);
 
-        $quizzes = Quiz::query()
-            ->where('owner_id', auth()->id())
-            ->with(['questions.options'])
-            ->latest('id')
-            ->get();
+        $validated = $request->validated();
+        $sort = $validated['sort'] ?? 'title';
+        $direction = $validated['direction'] ?? 'asc';
 
-        return response()->json($quizzes);
+        $query = Quiz::query()
+            ->where('owner_id', auth()->id());
+
+        if (! empty($validated['search'] ?? null)) {
+            $query->where('title', 'like', '%'.$validated['search'].'%');
+        }
+
+        $quizzes = $query
+            ->orderBy($sort, $direction)
+            ->orderBy('id', $direction)
+            ->paginate(15)
+            ->withQueryString();
+
+        return AdminQuizResource::collection($quizzes)->response();
+    }
+
+    public function attempts(
+        AdminQuizAttemptsRequest $request,
+        string $quiz
+    ): JsonResponse {
+        $quizModel = Quiz::withTrashed()->findOrFail($quiz);
+        $this->authorize('viewAttempts', $quizModel);
+
+        $validated = $request->validated();
+        $sort = $validated['sort'] ?? 'participant_name';
+        $direction = $validated['direction'] ?? 'asc';
+
+        $query = QuizAttempt::query()
+            ->whereHas('quizLink', function ($linkQuery) use ($quizModel): void {
+                $linkQuery->where('quiz_id', $quizModel->id);
+            })
+            ->whereNotNull('submitted_at');
+
+        if (! empty($validated['search'] ?? null)) {
+            $query->where('participant_name', 'like', '%'.$validated['search'].'%');
+        }
+
+        $attempts = $query
+            ->orderBy($sort, $direction)
+            ->orderBy('id', $direction)
+            ->paginate(15)
+            ->withQueryString();
+
+        return AdminQuizAttemptResource::collection($attempts)->response();
     }
 
     public function store(StoreQuizRequest $request): JsonResponse

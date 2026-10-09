@@ -130,8 +130,8 @@ class QuizManagementTest extends TestCase
 
         $this->getJson('/api/admin/quizzes')
             ->assertOk()
-            ->assertJsonCount(1)
-            ->assertJsonPath('0.id', $ownQuiz->id)
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $ownQuiz->id)
             ->assertJsonMissing(['title' => 'Deleted quiz'])
             ->assertJsonMissing(['title' => 'Other admin quiz']);
     }
