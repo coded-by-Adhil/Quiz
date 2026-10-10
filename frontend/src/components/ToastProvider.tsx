@@ -8,18 +8,12 @@ import {
 import {
   ToastContext,
   type ToastOptions,
-  type ToastVariant,
 } from "@/components/toastContext";
+import { Toast } from "@/components/Toast";
 
 interface Toast extends Required<ToastOptions> {
   id: number;
 }
-
-const variantClasses: Record<ToastVariant, string> = {
-  info: "border-slate-200 bg-white text-slate-900",
-  success: "border-emerald-200 bg-emerald-50 text-emerald-900",
-  error: "border-rose-200 bg-rose-50 text-rose-900",
-};
 
 export function ToastProvider({ children }: PropsWithChildren) {
   const [toasts, setToasts] = useState<Toast[]>([]);
@@ -58,24 +52,12 @@ export function ToastProvider({ children }: PropsWithChildren) {
         role="region"
       >
         {toasts.map((toast) => (
-          <div
-            className={[
-              "flex items-start justify-between gap-3 rounded-md border px-4 py-3 text-sm shadow-lg",
-              variantClasses[toast.variant],
-            ].join(" ")}
+          <Toast
             key={toast.id}
-            role="status"
-          >
-            <span>{toast.message}</span>
-            <button
-              aria-label="Dismiss notification"
-              className="font-semibold opacity-70 hover:opacity-100"
-              onClick={() => dismissToast(toast.id)}
-              type="button"
-            >
-              x
-            </button>
-          </div>
+            message={toast.message}
+            onDismiss={() => dismissToast(toast.id)}
+            variant={toast.variant}
+          />
         ))}
       </div>
     </ToastContext.Provider>

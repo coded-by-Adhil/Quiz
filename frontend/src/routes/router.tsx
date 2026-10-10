@@ -3,6 +3,7 @@ import { AuthProvider } from "@/features/auth/AuthContext";
 import { AuthenticatedPlaceholderPage } from "@/features/auth/pages/AuthenticatedPlaceholderPage";
 import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { RegisterPage } from "@/features/auth/pages/RegisterPage";
+import { DesignSystemPage } from "@/features/design-system/pages/DesignSystemPage";
 import { StatusPage } from "@/features/status/pages/StatusPage";
 import { AdminLayout } from "@/routes/AdminLayout";
 import { AuthLayout } from "@/routes/AuthLayout";
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
       {
         element: <StatusPage />,
         path: "/status",
+      },
+      {
+        element: <DesignSystemPage />,
+        path: "/design-system",
       },
       {
         element: <GuestOnly />,

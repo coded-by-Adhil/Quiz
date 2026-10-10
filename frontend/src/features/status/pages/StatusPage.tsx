@@ -1,5 +1,8 @@
+import { CheckCircle2, Database, RefreshCw, XCircle, Activity } from "lucide-react";
+import { Badge } from "@/components/Badge";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
+import { PageHeader } from "@/components/PageHeader";
 import { Spinner } from "@/components/Spinner";
 import { normalizeError } from "@/lib/normalizeError";
 import { useHealthQuery, usePingQuery } from "@/features/status/hooks/useStatusQueries";
@@ -7,6 +10,7 @@ import { useHealthQuery, usePingQuery } from "@/features/status/hooks/useStatusQ
 interface StatusPanelProps<T extends object> {
   data: T | undefined;
   error: unknown;
+  icon: typeof Activity;
   isLoading: boolean;
   onRetry: () => void;
   title: string;
@@ -15,30 +19,54 @@ interface StatusPanelProps<T extends object> {
 function StatusPanel<T extends object>({
   data,
   error,
+  icon: Icon,
   isLoading,
   onRetry,
   title,
 }: StatusPanelProps<T>) {
   if (isLoading) {
     return (
-      <Card aria-busy="true">
-        <div className="flex items-center gap-3">
-          <Spinner />
-          <h2 className="text-lg font-semibold text-slate-950">{title}</h2>
+      <Card aria-busy="true" className="grid gap-5">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <span className="text-primary">
+              <Icon aria-hidden="true" size={20} strokeWidth={1.8} />
+            </span>
+            <h2 className="text-heading font-semibold text-text">{title}</h2>
+          </div>
+          <Spinner size="sm" />
         </div>
-        <p className="mt-3 text-sm text-slate-600">Checking endpoint...</p>
+        <div className="h-20 animate-pulse rounded-md bg-surface-raised" />
       </Card>
     );
   }
 
   if (error) {
     return (
-      <Card>
-        <h2 className="text-lg font-semibold text-slate-950">{title}</h2>
-        <p className="mt-3 text-sm text-rose-700" role="alert">
+      <Card className="grid gap-5">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <span className="text-danger">
+              <Icon aria-hidden="true" size={20} strokeWidth={1.8} />
+            </span>
+            <h2 className="text-heading font-semibold text-text">{title}</h2>
+          </div>
+          <Badge
+            icon={<XCircle aria-hidden="true" size={14} strokeWidth={1.8} />}
+            variant="danger"
+          >
+            Unavailable
+          </Badge>
+        </div>
+        <p className="text-small text-danger" role="alert">
           {normalizeError(error).message}
         </p>
-        <Button className="mt-4" onClick={onRetry} variant="secondary">
+        <Button
+          className="justify-self-start"
+          icon={<RefreshCw aria-hidden="true" size={16} strokeWidth={1.8} />}
+          onClick={onRetry}
+          variant="secondary"
+        >
           Retry
         </Button>
       </Card>
@@ -46,9 +74,22 @@ function StatusPanel<T extends object>({
   }
 
   return (
-    <Card>
-      <h2 className="text-lg font-semibold text-slate-950">{title}</h2>
-      <pre className="mt-3 overflow-x-auto rounded-md bg-slate-950 p-4 text-left text-sm text-slate-100">
+    <Card className="grid gap-5">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <span className="text-primary">
+            <Icon aria-hidden="true" size={20} strokeWidth={1.8} />
+          </span>
+          <h2 className="text-heading font-semibold text-text">{title}</h2>
+        </div>
+        <Badge
+          icon={<CheckCircle2 aria-hidden="true" size={14} strokeWidth={1.8} />}
+          variant="success"
+        >
+          Operational
+        </Badge>
+      </div>
+      <pre className="overflow-x-auto rounded-md border border-border bg-surface-raised p-4 text-left font-mono text-small text-text">
         {JSON.stringify(data, null, 2)}
       </pre>
     </Card>
@@ -64,23 +105,30 @@ export function StatusPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-12 text-slate-950">
-      <div className="mx-auto grid w-full max-w-4xl gap-8">
-        <header className="grid gap-2">
-          <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-            Frontend foundation
-          </p>
-          <h1 className="text-3xl font-semibold">API status</h1>
-          <p className="text-slate-600">
-            Confirming connectivity with the Laravel API and database health
-            endpoint.
-          </p>
-        </header>
+    <main className="min-h-screen bg-background px-5 py-10 text-text sm:px-8 lg:py-16">
+      <div className="mx-auto grid w-full max-w-5xl gap-8">
+        <PageHeader
+          actions={
+            <Button
+              icon={<RefreshCw aria-hidden="true" size={16} strokeWidth={1.8} />}
+              disabled={pingQuery.isFetching || healthQuery.isFetching}
+              loading={pingQuery.isFetching || healthQuery.isFetching}
+              onClick={retryAll}
+              variant="secondary"
+            >
+              Retry all
+            </Button>
+          }
+          description="A small operational view for confirming the Laravel API and database connection."
+          eyebrow="Frontend foundation"
+          title="System status"
+        />
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-5 md:grid-cols-2">
           <StatusPanel
             data={pingQuery.data}
             error={pingQuery.error}
+            icon={Activity}
             isLoading={pingQuery.isPending || pingQuery.isFetching}
             onRetry={() => void pingQuery.refetch()}
             title="API ping"
@@ -88,21 +136,12 @@ export function StatusPage() {
           <StatusPanel
             data={healthQuery.data}
             error={healthQuery.error}
+            icon={Database}
             isLoading={healthQuery.isPending || healthQuery.isFetching}
             onRetry={() => void healthQuery.refetch()}
             title="Database health"
           />
         </div>
-
-        <Button
-          className="justify-self-start"
-          disabled={pingQuery.isFetching || healthQuery.isFetching}
-          loading={pingQuery.isFetching || healthQuery.isFetching}
-          onClick={retryAll}
-          variant="secondary"
-        >
-          Retry all
-        </Button>
       </div>
     </main>
   );

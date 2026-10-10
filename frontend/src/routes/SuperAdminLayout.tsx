@@ -1,10 +1,16 @@
-import { Outlet } from "react-router-dom";
-import { LayoutShell } from "@/routes/LayoutShell";
+import { BarChart3, LayoutDashboard, Users } from "lucide-react";
+import { WorkspaceLayout } from "@/routes/WorkspaceLayout";
 
 export function SuperAdminLayout() {
   return (
-    <LayoutShell label="Quiz Platform · Super Admin">
-      <Outlet />
-    </LayoutShell>
+    <WorkspaceLayout
+      accent="super"
+      navItems={[
+        { icon: LayoutDashboard, label: "Overview", to: "/superadmin" },
+        { icon: Users, label: "Admin accounts", to: "/superadmin/admins" },
+        { icon: BarChart3, label: "Platform stats", to: "/superadmin" },
+      ]}
+      roleLabel="Platform control"
+    />
   );
 }

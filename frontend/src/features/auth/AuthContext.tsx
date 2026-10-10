@@ -7,6 +7,7 @@ import {
   type PropsWithChildren,
 } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { RotateCcw } from "lucide-react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { getCurrentUser, loginAdmin, logoutAdmin, registerAdmin } from "@/api/auth";
 import {
@@ -66,20 +67,25 @@ function AuthRestoreState({
   onRetry,
 }: AuthRestoreStateProps) {
   return (
-    <main className="grid min-h-screen place-items-center bg-slate-50 px-6 py-12 text-slate-950">
-      <Card className="w-full max-w-md">
+    <main className="grid min-h-screen place-items-center bg-background px-5 py-10 text-text">
+      <Card className="w-full max-w-md shadow-raised">
         {loading ? (
           <div className="flex items-center gap-3">
             <Spinner />
-            <h1 className="text-lg font-semibold">Restoring your session...</h1>
+            <h1 className="text-heading font-semibold">Restoring your session...</h1>
           </div>
         ) : (
           <>
-            <h1 className="text-lg font-semibold">We could not restore your session</h1>
-            <p className="mt-3 text-sm text-rose-700" role="alert">
+            <h1 className="text-heading font-semibold">We could not restore your session</h1>
+            <p className="mt-3 text-small text-danger" role="alert">
               {error?.message ?? "Please try again."}
             </p>
-            <Button className="mt-5" onClick={onRetry} variant="secondary">
+            <Button
+              className="mt-5"
+              icon={<RotateCcw aria-hidden="true" size={17} strokeWidth={1.8} />}
+              onClick={onRetry}
+              variant="secondary"
+            >
               Retry
             </Button>
           </>

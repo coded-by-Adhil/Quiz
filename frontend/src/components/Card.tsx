@@ -7,7 +7,7 @@ export function Card({ children, className, ...props }: CardProps) {
     <div
       {...props}
       className={[
-        "rounded-lg border border-slate-200 bg-white p-5 shadow-sm",
+        "rounded-md border border-border bg-surface p-5 text-text shadow-subtle",
         className,
       ]
         .filter(Boolean)

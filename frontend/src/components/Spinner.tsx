@@ -16,7 +16,7 @@ export function Spinner({
     <span
       aria-label={label}
       className={[
-        "inline-block animate-spin rounded-full border-slate-300 border-t-slate-900",
+        "inline-block animate-spin rounded-full border-border border-t-primary",
         sizeClasses[size],
       ].join(" ")}
       role="status"

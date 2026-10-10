@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "react-router-dom";
+import { ThemeProvider } from "@/theme/ThemeProvider";
 import { normalizeError } from "@/lib/normalizeError";
 import { ToastProvider } from "@/components/ToastProvider";
 import { router } from "@/routes/router";
@@ -27,9 +28,11 @@ const queryClient = new QueryClient({
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ToastProvider>
-        <RouterProvider router={router} />
-      </ToastProvider>
+      <ThemeProvider>
+        <ToastProvider>
+          <RouterProvider router={router} />
+        </ToastProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

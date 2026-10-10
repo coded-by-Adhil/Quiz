@@ -4,38 +4,49 @@ export interface InputProps
   extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   error?: string;
+  helperText?: string;
 }
 
 export function Input({
   className,
   error,
+  helperText,
   id,
   label,
   ...props
 }: InputProps) {
-  const errorId = error && id ? `${id}-error` : undefined;
+  const inputId = id ?? props.name;
+  const errorId = error && inputId ? `${inputId}-error` : undefined;
+  const helperId = helperText && inputId ? `${inputId}-helper` : undefined;
+  const describedBy = [errorId, helperId].filter(Boolean).join(" ") || undefined;
 
   return (
     <div className="grid gap-1.5">
-      <label className="text-sm font-medium text-slate-800" htmlFor={id}>
+      <label className="text-small font-semibold text-text" htmlFor={inputId}>
         {label}
       </label>
       <input
         {...props}
-        aria-describedby={errorId}
+        aria-describedby={describedBy}
         aria-invalid={error ? true : undefined}
         className={[
-          "min-h-10 rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none",
-          "placeholder:text-slate-400 focus:border-slate-600 focus:ring-2 focus:ring-slate-200",
-          error ? "border-rose-600 focus:border-rose-600 focus:ring-rose-100" : "",
+          "min-h-10 rounded-md border border-border bg-surface px-3 py-2 text-body text-text outline-none transition-[background-color,border-color,box-shadow,color] duration-fast ease-standard placeholder:text-text-muted",
+          "focus:border-primary focus:ring-2 focus:ring-focus-ring focus:ring-offset-1 focus:ring-offset-surface",
+          "disabled:cursor-not-allowed disabled:bg-surface-raised disabled:text-text-muted disabled:opacity-70",
+          error ? "border-danger focus:border-danger focus:ring-danger" : "",
           className,
         ]
           .filter(Boolean)
           .join(" ")}
-        id={id}
+        id={inputId}
       />
+      {helperText && !error ? (
+        <p className="text-small text-text-muted" id={helperId}>
+          {helperText}
+        </p>
+      ) : null}
       {error ? (
-        <p className="text-sm text-rose-700" id={errorId} role="alert">
+        <p className="text-small text-danger" id={errorId} role="alert">
           {error}
         </p>
       ) : null}

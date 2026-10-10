@@ -1,10 +1,16 @@
-import { Outlet } from "react-router-dom";
-import { LayoutShell } from "@/routes/LayoutShell";
+import { BarChart3, CircleHelp, LayoutDashboard } from "lucide-react";
+import { WorkspaceLayout } from "@/routes/WorkspaceLayout";
 
 export function AdminLayout() {
   return (
-    <LayoutShell label="Quiz Platform · Admin">
-      <Outlet />
-    </LayoutShell>
+    <WorkspaceLayout
+      accent="admin"
+      navItems={[
+        { icon: LayoutDashboard, label: "Quizzes", to: "/admin/quizzes" },
+        { icon: CircleHelp, label: "Question bank", to: "/admin/questions" },
+        { icon: BarChart3, label: "Reports", to: "/admin/quizzes" },
+      ]}
+      roleLabel="Admin workspace"
+    />
   );
 }
