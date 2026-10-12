@@ -48,10 +48,12 @@ function QuestionTypeBadge({ type }: { type: Question["type"] }) {
 }
 
 function QuestionActions({
+  displayNumber,
   onDelete,
   onView,
   question,
 }: {
+  displayNumber: number;
   onDelete: (question: Question) => void;
   onView: (question: Question) => void;
   question: Question;
@@ -59,14 +61,14 @@ function QuestionActions({
   return (
     <div className="flex items-center justify-end gap-1">
       <Button
-        aria-label={`View question ${question.id}`}
+        aria-label={`View question ${displayNumber}`}
         icon={<Eye aria-hidden="true" size={17} strokeWidth={1.8} />}
         onClick={() => onView(question)}
         title="View question"
         variant="ghost"
       />
       <Link
-        aria-label={`Edit question ${question.id}`}
+        aria-label={`Edit question ${displayNumber}`}
         className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-md text-text-muted transition-colors duration-fast ease-standard hover:bg-surface-raised hover:text-text focus-visible:ring-2 focus-visible:ring-focus-ring"
         title="Edit question"
         to={`/admin/questions/${question.id}/edit`}
@@ -74,7 +76,7 @@ function QuestionActions({
         <Pencil aria-hidden="true" size={17} strokeWidth={1.8} />
       </Link>
       <Button
-        aria-label={`Delete question ${question.id}`}
+        aria-label={`Delete question ${displayNumber}`}
         icon={<Trash2 aria-hidden="true" size={17} strokeWidth={1.8} />}
         onClick={() => onDelete(question)}
         title="Delete question"
@@ -225,43 +227,83 @@ export function QuestionListPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {pageQuestions.map((question) => (
-                  <TableRow key={question.id}>
-                    <TableCell className="font-mono text-label text-text-muted">{question.id}</TableCell>
-                    <TableCell>
-                      <p className="line-clamp-2 break-words font-semibold text-text" title={question.question_text}>
-                        {question.question_text}
-                      </p>
-                    </TableCell>
-                    <TableCell><QuestionTypeBadge type={question.type} /></TableCell>
-                    <TableCell className="text-label text-text-muted">{formatDate(question.created_at)}</TableCell>
-                    <TableCell className="text-label text-text-muted">{formatDate(question.updated_at)}</TableCell>
-                    <TableCell>
-                      <QuestionActions onDelete={openDeleteDialog} onView={setViewQuestion} question={question} />
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {pageQuestions.map((question, index) => {
+                  const displayNumber = (safePage - 1) * questionsPerPage + index + 1;
+
+                  return (
+                    <TableRow key={question.id}>
+                      <TableCell className="font-mono text-label text-text-muted">
+                        {displayNumber}
+                      </TableCell>
+                      <TableCell>
+                        <p
+                          className="line-clamp-2 break-words font-semibold text-text"
+                          title={question.question_text}
+                        >
+                          {question.question_text}
+                        </p>
+                      </TableCell>
+                      <TableCell>
+                        <QuestionTypeBadge type={question.type} />
+                      </TableCell>
+                      <TableCell className="text-label text-text-muted">
+                        {formatDate(question.created_at)}
+                      </TableCell>
+                      <TableCell className="text-label text-text-muted">
+                        {formatDate(question.updated_at)}
+                      </TableCell>
+                      <TableCell>
+                        <QuestionActions
+                          displayNumber={displayNumber}
+                          onDelete={openDeleteDialog}
+                          onView={setViewQuestion}
+                          question={question}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </div>
 
           <div className="grid gap-3 md:hidden">
-            {pageQuestions.map((question) => (
-              <Card className="grid gap-4" key={question.id}>
-                <div className="flex items-start justify-between gap-3">
-                  <span className="font-mono text-label text-text-muted">Question #{question.id}</span>
-                  <QuestionTypeBadge type={question.type} />
-                </div>
-                <p className="break-words font-semibold text-text" title={question.question_text}>
-                  {question.question_text}
-                </p>
-                <dl className="grid grid-cols-2 gap-3 text-label text-text-muted">
-                  <div><dt>Created</dt><dd className="mt-1 text-text">{formatDate(question.created_at)}</dd></div>
-                  <div><dt>Updated</dt><dd className="mt-1 text-text">{formatDate(question.updated_at)}</dd></div>
-                </dl>
-                <QuestionActions onDelete={openDeleteDialog} onView={setViewQuestion} question={question} />
-              </Card>
-            ))}
+            {pageQuestions.map((question, index) => {
+              const displayNumber = (safePage - 1) * questionsPerPage + index + 1;
+
+              return (
+                <Card className="grid gap-4" key={question.id}>
+                  <div className="flex items-start justify-between gap-3">
+                    <span className="font-mono text-label text-text-muted">
+                      Question #{displayNumber}
+                    </span>
+                    <QuestionTypeBadge type={question.type} />
+                  </div>
+                  <p
+                    className="break-words font-semibold text-text"
+                    title={question.question_text}
+                  >
+                    {question.question_text}
+                  </p>
+                  <dl className="grid grid-cols-2 gap-3 text-label text-text-muted">
+                    <div>
+                      <dt>Created</dt>
+                      <dd className="mt-1 text-text">{formatDate(question.created_at)}</dd>
+                    </div>
+                    <div>
+                      <dt>Updated</dt>
+                      <dd className="mt-1 text-text">{formatDate(question.updated_at)}</dd>
+                    </div>
+                  </dl>
+                  <QuestionActions
+                    displayNumber={displayNumber}
+                    onDelete={openDeleteDialog}
+                    onView={setViewQuestion}
+                    question={question}
+                  />
+                </Card>
+              );
+            })}
           </div>
 
           <Pagination
