@@ -2,18 +2,24 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/Button";
 
 interface PaginationProps {
+  ariaLabel?: string;
   currentPage: number;
   onPageChange: (page: number) => void;
   totalPages: number;
 }
 
-export function Pagination({ currentPage, onPageChange, totalPages }: PaginationProps) {
+export function Pagination({
+  ariaLabel = "Pagination",
+  currentPage,
+  onPageChange,
+  totalPages,
+}: PaginationProps) {
   if (totalPages <= 1) {
     return null;
   }
 
   return (
-    <nav aria-label="Question pagination" className="flex items-center justify-between gap-4">
+    <nav aria-label={ariaLabel} className="flex items-center justify-between gap-4">
       <Button
         aria-label="Previous page"
         disabled={currentPage === 1}

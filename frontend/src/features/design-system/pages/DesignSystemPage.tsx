@@ -18,11 +18,15 @@ import { EmptyState } from "@/components/EmptyState";
 import { Input } from "@/components/Input";
 import { PageHeader } from "@/components/PageHeader";
 import { Pagination } from "@/components/Pagination";
+import { SearchInput } from "@/components/SearchInput";
 import { Skeleton } from "@/components/Skeleton";
 import { Spinner } from "@/components/Spinner";
+import { Switch } from "@/components/Switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/Table";
+import { Textarea } from "@/components/Textarea";
 import { Toast } from "@/components/Toast";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Tooltip } from "@/components/Tooltip";
 
 const colorTokens = [
   "background",
@@ -171,6 +175,7 @@ function TokenSection({ theme }: { theme: "light" | "dark" }) {
 
 function ComponentSection({ theme }: { theme: "light" | "dark" }) {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [switchOn, setSwitchOn] = useState(true);
 
   return (
     <div className="grid gap-8 border-t border-border pt-8">
@@ -218,6 +223,12 @@ function ComponentSection({ theme }: { theme: "light" | "dark" }) {
             readOnly
           />
           <Input disabled id={`${theme}-disabled-input`} label="Disabled" value="Unavailable" readOnly />
+          <Textarea
+            helperText="Longer descriptions use the same field conventions."
+            id={`${theme}-textarea`}
+            label="Textarea"
+            placeholder="Write a description"
+          />
         </div>
         <div className="grid content-start gap-4">
           <h4 className="font-mono text-label font-semibold uppercase tracking-[0.1em] text-primary">
@@ -242,6 +253,20 @@ function ComponentSection({ theme }: { theme: "light" | "dark" }) {
               </div>
             </div>
           </Card>
+          <SearchInput
+            id={`${theme}-search-input`}
+            label="Search input"
+            placeholder="Search by title"
+            value=""
+            onChange={() => undefined}
+          />
+          <Switch
+            checked={switchOn}
+            description="A compact binary choice with a visible label."
+            id={`${theme}-switch`}
+            label="Switch control"
+            onChange={(event) => setSwitchOn(event.target.checked)}
+          />
         </div>
       </section>
 
@@ -279,6 +304,20 @@ function ComponentSection({ theme }: { theme: "light" | "dark" }) {
           <Toast message="The account is approved." onDismiss={() => undefined} variant="success" />
           <Toast message="Approval is still pending." onDismiss={() => undefined} variant="warning" />
           <Toast message="The request could not be completed." onDismiss={() => undefined} variant="error" />
+        </div>
+      </section>
+
+      <section className="grid gap-4">
+        <h4 className="font-mono text-label font-semibold uppercase tracking-[0.1em] text-primary">
+          Tooltip
+        </h4>
+        <div className="flex items-center gap-3">
+          <Tooltip label="This label appears on hover or focus">
+            <Button aria-label="Tooltip example" variant="secondary">
+              Hover or focus
+            </Button>
+          </Tooltip>
+          <p className="text-small text-text-muted">Use for unfamiliar icon-only actions.</p>
         </div>
       </section>
 
@@ -334,7 +373,7 @@ function ComponentSection({ theme }: { theme: "light" | "dark" }) {
             </TableBody>
           </Table>
         </div>
-        <Pagination currentPage={2} onPageChange={() => undefined} totalPages={4} />
+        <Pagination ariaLabel="Design system pagination" currentPage={2} onPageChange={() => undefined} totalPages={4} />
       </section>
     </div>
   );

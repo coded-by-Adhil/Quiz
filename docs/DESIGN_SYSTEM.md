@@ -86,6 +86,22 @@ Use `primary` for the main action, `secondary` for a parallel action, `ghost` fo
 
 Use a visible label for every field. Use `helperText` for concise guidance and `error` for validation feedback. The component connects labels, helper text, and errors through accessible IDs and supports disabled, focus, and error states.
 
+### Textarea
+
+Use `Textarea` for multi-line text such as quiz descriptions. It follows the same visible-label, helper-text, and server-error conventions as `Input`.
+
+### Switch
+
+Use `Switch` for a binary setting such as enabling a quiz time limit. Always provide a clear label; use the description for the consequence of turning the setting on or off.
+
+### SearchInput
+
+Use `SearchInput` for text filtering. Keep the label visible, debounce remote searches in the owning feature, and provide a clear action when a value is present.
+
+### Tooltip
+
+Use `Tooltip` to name unfamiliar icon-only actions. Keep the accessible name on the interactive element as well; the tooltip is an additional visual cue, not the only label.
+
 ### Card
 
 Use cards only for individual repeated items, dialogs, forms, and genuinely framed tools. Do not place page sections inside nested cards.

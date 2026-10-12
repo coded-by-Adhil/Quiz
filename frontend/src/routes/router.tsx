@@ -7,6 +7,10 @@ import { DesignSystemPage } from "@/features/design-system/pages/DesignSystemPag
 import { QuestionCreatePage } from "@/features/questions/pages/QuestionCreatePage";
 import { QuestionEditPage } from "@/features/questions/pages/QuestionEditPage";
 import { QuestionListPage } from "@/features/questions/pages/QuestionListPage";
+import { QuizCreatePage } from "@/features/quizzes/pages/QuizCreatePage";
+import { QuizDetailPage } from "@/features/quizzes/pages/QuizDetailPage";
+import { QuizEditPage } from "@/features/quizzes/pages/QuizEditPage";
+import { QuizListPage } from "@/features/quizzes/pages/QuizListPage";
 import { StatusPage } from "@/features/status/pages/StatusPage";
 import { AdminLayout } from "@/routes/AdminLayout";
 import { AuthLayout } from "@/routes/AuthLayout";
@@ -56,8 +60,10 @@ export const router = createBrowserRouter([
                   { element: <QuestionListPage />, path: "admin/questions" },
                   { element: <QuestionCreatePage />, path: "admin/questions/new" },
                   { element: <QuestionEditPage />, path: "admin/questions/:id/edit" },
-                  { element: <AuthenticatedPlaceholderPage />, path: "admin/quizzes" },
-                  { element: <AuthenticatedPlaceholderPage />, path: "admin/quizzes/:id" },
+                  { element: <QuizListPage />, path: "admin/quizzes" },
+                  { element: <QuizCreatePage />, path: "admin/quizzes/new" },
+                  { element: <QuizDetailPage />, path: "admin/quizzes/:id" },
+                  { element: <QuizEditPage />, path: "admin/quizzes/:id/edit" },
                   {
                     element: <AuthenticatedPlaceholderPage />,
                     path: "admin/quizzes/:id/attempts",
