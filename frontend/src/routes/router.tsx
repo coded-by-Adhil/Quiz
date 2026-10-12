@@ -4,6 +4,9 @@ import { AuthenticatedPlaceholderPage } from "@/features/auth/pages/Authenticate
 import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { RegisterPage } from "@/features/auth/pages/RegisterPage";
 import { DesignSystemPage } from "@/features/design-system/pages/DesignSystemPage";
+import { QuestionCreatePage } from "@/features/questions/pages/QuestionCreatePage";
+import { QuestionEditPage } from "@/features/questions/pages/QuestionEditPage";
+import { QuestionListPage } from "@/features/questions/pages/QuestionListPage";
 import { StatusPage } from "@/features/status/pages/StatusPage";
 import { AdminLayout } from "@/routes/AdminLayout";
 import { AuthLayout } from "@/routes/AuthLayout";
@@ -50,7 +53,9 @@ export const router = createBrowserRouter([
               {
                 element: <AdminLayout />,
                 children: [
-                  { element: <AuthenticatedPlaceholderPage />, path: "admin/questions" },
+                  { element: <QuestionListPage />, path: "admin/questions" },
+                  { element: <QuestionCreatePage />, path: "admin/questions/new" },
+                  { element: <QuestionEditPage />, path: "admin/questions/:id/edit" },
                   { element: <AuthenticatedPlaceholderPage />, path: "admin/quizzes" },
                   { element: <AuthenticatedPlaceholderPage />, path: "admin/quizzes/:id" },
                   {

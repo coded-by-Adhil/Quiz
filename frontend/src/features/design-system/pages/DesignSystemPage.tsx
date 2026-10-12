@@ -17,8 +17,10 @@ import { Dialog } from "@/components/Dialog";
 import { EmptyState } from "@/components/EmptyState";
 import { Input } from "@/components/Input";
 import { PageHeader } from "@/components/PageHeader";
+import { Pagination } from "@/components/Pagination";
 import { Skeleton } from "@/components/Skeleton";
 import { Spinner } from "@/components/Spinner";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/Table";
 import { Toast } from "@/components/Toast";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -303,6 +305,36 @@ function ComponentSection({ theme }: { theme: "light" | "dark" }) {
             </Button>
           </div>
         </Dialog>
+      </section>
+
+      <section className="grid gap-4">
+        <h4 className="font-mono text-label font-semibold uppercase tracking-[0.1em] text-primary">
+          Table and pagination
+        </h4>
+        <div className="overflow-hidden rounded-md border border-border bg-surface">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>ID</TableHead>
+                <TableHead>Question</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell className="font-mono text-label text-text-muted">01</TableCell>
+                <TableCell className="font-semibold">Which answer is correct?</TableCell>
+                <TableCell><Badge variant="success">Ready</Badge></TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-mono text-label text-text-muted">02</TableCell>
+                <TableCell className="font-semibold">Which options apply?</TableCell>
+                <TableCell><Badge variant="warning">Draft</Badge></TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+        <Pagination currentPage={2} onPageChange={() => undefined} totalPages={4} />
       </section>
     </div>
   );

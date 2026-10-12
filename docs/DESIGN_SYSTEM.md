@@ -114,6 +114,10 @@ Use the hand-written toast provider for short-lived feedback. Toast variants are
 
 Use the native `dialog` component for focused decisions and confirmations. It traps Tab focus, closes on Escape, provides a labelled close button, and must not be used for routine page content.
 
+### Table and Pagination
+
+Use `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, and `TableCell` for compact, scan-friendly data lists. Keep column content short, allow long user text to wrap or clamp, and switch to stacked cards when a table cannot remain readable on small screens. Use `Pagination` for bounded lists; icon-only navigation buttons must retain accessible labels and tooltips.
+
 ## Layouts
 
 - **AuthLayout:** quiet access header, no gradient, and a responsive information-plus-form composition.

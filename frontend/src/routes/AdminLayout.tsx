@@ -7,7 +7,7 @@ export function AdminLayout() {
       accent="admin"
       navItems={[
         { icon: LayoutDashboard, label: "Quizzes", to: "/admin/quizzes" },
-        { icon: CircleHelp, label: "Question bank", to: "/admin/questions" },
+        { icon: CircleHelp, label: "Questions", to: "/admin/questions" },
         { icon: BarChart3, label: "Reports", to: "/admin/quizzes" },
       ]}
       roleLabel="Admin workspace"
