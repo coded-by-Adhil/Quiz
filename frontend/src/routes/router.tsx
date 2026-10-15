@@ -4,6 +4,9 @@ import { AuthenticatedPlaceholderPage } from "@/features/auth/pages/Authenticate
 import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { RegisterPage } from "@/features/auth/pages/RegisterPage";
 import { DesignSystemPage } from "@/features/design-system/pages/DesignSystemPage";
+import { GuestLandingPage } from "@/features/guest-quiz/pages/GuestLandingPage";
+import { GuestQuizPage } from "@/features/guest-quiz/pages/GuestQuizPage";
+import { GuestResultPage } from "@/features/guest-quiz/pages/GuestResultPage";
 import { QuestionCreatePage } from "@/features/questions/pages/QuestionCreatePage";
 import { QuestionEditPage } from "@/features/questions/pages/QuestionEditPage";
 import { QuestionListPage } from "@/features/questions/pages/QuestionListPage";
@@ -18,10 +21,23 @@ import { AuthLayout } from "@/routes/AuthLayout";
 import { GuestLayout } from "@/routes/GuestLayout";
 import { GuestOnly, RequireAuth, RequireRole } from "@/routes/guards";
 import { NotFoundPage } from "@/routes/NotFoundPage";
-import { RoutePlaceholder } from "@/routes/RoutePlaceholder";
 import { SuperAdminLayout } from "@/routes/SuperAdminLayout";
 
 export const router = createBrowserRouter([
+  {
+    element: <GuestLayout />,
+    children: [
+      { element: <GuestLandingPage />, path: "q/:token" },
+      {
+        element: <GuestQuizPage />,
+        path: "q/:token/attempt/:attemptId",
+      },
+      {
+        element: <GuestResultPage />,
+        path: "q/:token/attempt/:attemptId/result",
+      },
+    ],
+  },
   {
     element: <AuthProvider />,
     children: [
@@ -99,10 +115,6 @@ export const router = createBrowserRouter([
             ],
           },
         ],
-      },
-      {
-        element: <GuestLayout />,
-        children: [{ element: <RoutePlaceholder />, path: "q/:token" }],
       },
       {
         element: <NotFoundPage />,

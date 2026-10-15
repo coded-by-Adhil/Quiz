@@ -20,6 +20,7 @@ import { EmptyState } from "@/components/EmptyState";
 import { Input } from "@/components/Input";
 import { PageHeader } from "@/components/PageHeader";
 import { Pagination } from "@/components/Pagination";
+import { RadioGroup } from "@/components/RadioGroup";
 import { SearchInput } from "@/components/SearchInput";
 import { Select } from "@/components/Select";
 import { Skeleton } from "@/components/Skeleton";
@@ -30,6 +31,9 @@ import { Textarea } from "@/components/Textarea";
 import { Toast } from "@/components/Toast";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Tooltip } from "@/components/Tooltip";
+import { ProgressBar } from "@/features/guest-quiz/components/ProgressBar";
+import { ScoreSummary } from "@/features/guest-quiz/components/ScoreSummary";
+import { Timer } from "@/features/guest-quiz/components/Timer";
 
 const colorTokens = [
   "background",
@@ -180,6 +184,7 @@ function ComponentSection({ theme }: { theme: "light" | "dark" }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [switchOn, setSwitchOn] = useState(true);
   const [checkboxOn, setCheckboxOn] = useState(true);
+  const [radioId, setRadioId] = useState<number | null>(1);
 
   return (
     <div className="grid gap-8 border-t border-border pt-8">
@@ -280,6 +285,15 @@ function ComponentSection({ theme }: { theme: "light" | "dark" }) {
             onToggle={(_id, checked) => setCheckboxOn(checked)}
             options={[{ checked: checkboxOn, id: 1, label: "Include this option" }]}
           />
+          <RadioGroup
+            legend="Radio group"
+            onSelect={setRadioId}
+            options={[
+              { id: 1, label: "Choose one option" },
+              { id: 2, label: "Another option" },
+            ]}
+            selectedId={radioId}
+          />
           <CopyButton onCopy={() => undefined} />
         </div>
       </section>
@@ -305,6 +319,28 @@ function ComponentSection({ theme }: { theme: "light" | "dark" }) {
             description="There is nothing here yet, but the next useful action is ready."
             icon={<Users aria-hidden="true" size={24} strokeWidth={1.7} />}
             title="No records yet"
+          />
+        </div>
+      </section>
+
+      <section className="grid gap-4">
+        <h4 className="font-mono text-label font-semibold uppercase tracking-[0.1em] text-primary">
+          Guest quiz feedback
+        </h4>
+        <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid content-start gap-4">
+            <p className="text-small font-semibold text-text">Progress</p>
+            <ProgressBar current={3} total={10} />
+            <div className="flex flex-wrap gap-3">
+              <Timer isCritical={false} remainingSeconds={312} />
+              <Timer isCritical remainingSeconds={42} />
+            </div>
+          </div>
+          <ScoreSummary
+            message="Good effort"
+            percentage={60}
+            score={3}
+            totalMarks={5}
           />
         </div>
       </section>

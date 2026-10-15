@@ -98,6 +98,24 @@ Use `Select` for a bounded option set with a visible label. Keep the empty promp
 
 Use `CheckboxGroup` when a user selects several related items. It renders a fieldset and legend, keeps the group keyboard accessible, and can disable options when a selection limit is reached.
 
+Use the `comfortable` option size for guest quiz answers so the whole option card is easy to tap on small screens.
+
+### RadioGroup
+
+Use `RadioGroup` when a user must choose exactly one answer. It renders a labelled fieldset with full-width, keyboard-accessible option cards and keeps the selected value explicit.
+
+### ProgressBar
+
+Use `ProgressBar` for bounded progress such as a guest quiz question position. Always provide the current and total values so the progressbar exposes useful screen-reader information.
+
+### Timer
+
+Use `Timer` for a countdown with a fixed deadline managed by the owning feature. Pair the semantic timer with text, and switch to the critical state below one minute rather than relying on color alone.
+
+### ScoreSummary
+
+Use `ScoreSummary` for a prominent quiz result. Show the score, percentage, and plain-language tier message together; do not use pass/fail language when the product has not defined a passing threshold.
+
 ### CopyButton
 
 Use `CopyButton` for a compact copy action. Keep the full value outside the button label, provide a tooltip and accessible name, and announce the result through the owning feature's live region and toast.

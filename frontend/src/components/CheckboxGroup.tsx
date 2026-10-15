@@ -10,6 +10,7 @@ export interface CheckboxOption {
 interface CheckboxGroupProps {
   error?: string;
   legend: string;
+  optionSize?: "default" | "comfortable";
   onToggle: (id: number, checked: boolean) => void;
   options: CheckboxOption[];
 }
@@ -17,6 +18,7 @@ interface CheckboxGroupProps {
 export function CheckboxGroup({
   error,
   legend,
+  optionSize = "default",
   onToggle,
   options,
 }: CheckboxGroupProps) {
@@ -27,7 +29,8 @@ export function CheckboxGroup({
         {options.map((option) => (
           <label
             className={[
-              "flex min-h-10 items-start gap-3 rounded-md border border-border bg-surface px-3 py-3 text-small transition-colors duration-fast ease-standard",
+              "flex items-start gap-3 rounded-md border border-border bg-surface px-3 py-3 text-small transition-colors duration-fast ease-standard",
+              optionSize === "comfortable" ? "min-h-12" : "min-h-10",
               option.disabled
                 ? "cursor-not-allowed bg-surface-raised text-text-muted opacity-70"
                 : "cursor-pointer hover:border-primary hover:bg-surface-raised",
