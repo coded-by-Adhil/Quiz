@@ -7,6 +7,7 @@ import { DesignSystemPage } from "@/features/design-system/pages/DesignSystemPag
 import { QuestionCreatePage } from "@/features/questions/pages/QuestionCreatePage";
 import { QuestionEditPage } from "@/features/questions/pages/QuestionEditPage";
 import { QuestionListPage } from "@/features/questions/pages/QuestionListPage";
+import { LinkManagementPage } from "@/features/links/pages/LinkManagementPage";
 import { QuizCreatePage } from "@/features/quizzes/pages/QuizCreatePage";
 import { QuizDetailPage } from "@/features/quizzes/pages/QuizDetailPage";
 import { QuizEditPage } from "@/features/quizzes/pages/QuizEditPage";
@@ -60,6 +61,7 @@ export const router = createBrowserRouter([
                   { element: <QuestionListPage />, path: "admin/questions" },
                   { element: <QuestionCreatePage />, path: "admin/questions/new" },
                   { element: <QuestionEditPage />, path: "admin/questions/:id/edit" },
+                  { element: <LinkManagementPage />, path: "admin/links" },
                   { element: <QuizListPage />, path: "admin/quizzes" },
                   { element: <QuizCreatePage />, path: "admin/quizzes/new" },
                   { element: <QuizDetailPage />, path: "admin/quizzes/:id" },

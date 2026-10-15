@@ -13,12 +13,15 @@ import {
 import { Badge } from "@/components/Badge";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
+import { CheckboxGroup } from "@/components/CheckboxGroup";
+import { CopyButton } from "@/components/CopyButton";
 import { Dialog } from "@/components/Dialog";
 import { EmptyState } from "@/components/EmptyState";
 import { Input } from "@/components/Input";
 import { PageHeader } from "@/components/PageHeader";
 import { Pagination } from "@/components/Pagination";
 import { SearchInput } from "@/components/SearchInput";
+import { Select } from "@/components/Select";
 import { Skeleton } from "@/components/Skeleton";
 import { Spinner } from "@/components/Spinner";
 import { Switch } from "@/components/Switch";
@@ -176,6 +179,7 @@ function TokenSection({ theme }: { theme: "light" | "dark" }) {
 function ComponentSection({ theme }: { theme: "light" | "dark" }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [switchOn, setSwitchOn] = useState(true);
+  const [checkboxOn, setCheckboxOn] = useState(true);
 
   return (
     <div className="grid gap-8 border-t border-border pt-8">
@@ -267,6 +271,16 @@ function ComponentSection({ theme }: { theme: "light" | "dark" }) {
             label="Switch control"
             onChange={(event) => setSwitchOn(event.target.checked)}
           />
+          <Select id={`${theme}-select`} label="Select">
+            <option value="first">First option</option>
+            <option value="second">Second option</option>
+          </Select>
+          <CheckboxGroup
+            legend="Checkbox group"
+            onToggle={(_id, checked) => setCheckboxOn(checked)}
+            options={[{ checked: checkboxOn, id: 1, label: "Include this option" }]}
+          />
+          <CopyButton onCopy={() => undefined} />
         </div>
       </section>
 

@@ -90,6 +90,18 @@ Use a visible label for every field. Use `helperText` for concise guidance and `
 
 Use `Textarea` for multi-line text such as quiz descriptions. It follows the same visible-label, helper-text, and server-error conventions as `Input`.
 
+### Select
+
+Use `Select` for a bounded option set with a visible label. Keep the empty prompt explicit and expose validation or helper text through the component rather than relying on placeholder text alone.
+
+### CheckboxGroup
+
+Use `CheckboxGroup` when a user selects several related items. It renders a fieldset and legend, keeps the group keyboard accessible, and can disable options when a selection limit is reached.
+
+### CopyButton
+
+Use `CopyButton` for a compact copy action. Keep the full value outside the button label, provide a tooltip and accessible name, and announce the result through the owning feature's live region and toast.
+
 ### Switch
 
 Use `Switch` for a binary setting such as enabling a quiz time limit. Always provide a clear label; use the description for the consequence of turning the setting on or off.

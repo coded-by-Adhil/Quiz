@@ -164,7 +164,7 @@ Expected: **200** and `is_active: true`.
 
 Expected: **422**. No link is created.
 
-### 6.2 Eleven-question subset
+### 6.2 `
 
 Prepare eleven questions that are all owned by admin A and all attached to `quiz_id` through Phase 3. Send:
 
