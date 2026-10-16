@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Check } from "lucide-react";
 
 export interface CheckboxOption {
   id: number;
@@ -28,6 +29,7 @@ export function CheckboxGroup({
       <div className="grid gap-2">
         {options.map((option) => (
           <label
+            data-slot="option"
             className={[
               "flex items-start gap-3 rounded-md border border-border bg-surface px-3 py-3 text-small transition-colors duration-fast ease-standard",
               optionSize === "comfortable" ? "min-h-12" : "min-h-10",
@@ -45,6 +47,7 @@ export function CheckboxGroup({
               type="checkbox"
             />
             <span className="min-w-0 flex-1">{option.label}</span>
+            <Check aria-hidden="true" className="guest-option-check hidden" size={20} />
           </label>
         ))}
       </div>

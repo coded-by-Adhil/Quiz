@@ -6,6 +6,7 @@ export function Card({ children, className, ...props }: CardProps) {
   return (
     <div
       {...props}
+      data-slot="card"
       className={[
         "rounded-md border border-border bg-surface p-5 text-text shadow-subtle",
         className,

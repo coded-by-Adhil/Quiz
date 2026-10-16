@@ -9,6 +9,7 @@ import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { Input } from "@/components/Input";
 import { Spinner } from "@/components/Spinner";
+import { GuestStateArtwork, LandingArtwork } from "@/features/guest-quiz/components/GuestArtwork";
 import { normalizeError } from "@/lib/normalizeError";
 import { useGuestQuizQuery, useStartGuestQuizMutation } from "@/features/guest-quiz/hooks/useGuestQuizQueries";
 import { createGuestAttemptStorage, setStoredGuestAttempt } from "@/features/guest-quiz/storage";
@@ -124,7 +125,8 @@ export function GuestLandingPage() {
     const isNotFound = apiError.status === 404;
 
     return (
-      <section className="grid min-h-[60vh] content-center gap-5">
+      <section className="guest-state grid min-h-[60vh] content-center gap-5">
+        <GuestStateArtwork kind={isUnavailable ? "unavailable" : isNotFound ? "not-found" : "network"} />
         <Badge variant={isUnavailable ? "warning" : "danger"}>
           {isUnavailable ? "Unavailable" : isNotFound ? "Not found" : "Could not load"}
         </Badge>
@@ -156,7 +158,8 @@ export function GuestLandingPage() {
   }
 
   return (
-    <section className="grid gap-8 py-8 sm:py-14">
+    <section className="guest-landing grid gap-8 py-8 sm:py-14">
+      <LandingArtwork />
       <div className="grid gap-5">
         <Badge variant="info">Guest quiz</Badge>
         <div className="grid gap-3">
@@ -166,13 +169,13 @@ export function GuestLandingPage() {
             <p className="max-w-2xl text-body text-text-muted">{query.data.description}</p>
           ) : null}
         </div>
-        <div className="flex items-center gap-2 text-small font-semibold text-text-muted">
+        <div className="guest-duration flex items-center gap-2 text-small font-semibold text-text-muted">
           <Clock3 aria-hidden="true" size={17} strokeWidth={1.8} />
           <span>{durationLabel(query.data.duration_minutes)}</span>
         </div>
       </div>
 
-      <Card className="grid gap-5 shadow-raised">
+      <Card className="guest-start-form grid gap-5">
         <div className="grid gap-2">
           <h2 className="text-heading font-semibold text-text">Before you begin</h2>
           <p className="text-small text-text-muted">

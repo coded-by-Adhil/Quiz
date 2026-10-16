@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { AlertCircle, ArrowLeft, ArrowRight, RotateCcw, Send } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/Button";
@@ -20,6 +20,8 @@ import {
 } from "@/features/guest-quiz/storage";
 import { ProgressBar } from "@/features/guest-quiz/components/ProgressBar";
 import { Timer } from "@/features/guest-quiz/components/Timer";
+import { GuestStateArtwork } from "@/features/guest-quiz/components/GuestArtwork";
+import { QuestionTransition } from "@/features/guest-quiz/components/GuestMotion";
 
 function errorText(error: unknown): string {
   const apiError = normalizeError(error);
@@ -154,13 +156,14 @@ export function GuestQuizPage() {
 
   if (!attempt) {
     return (
-      <section className="grid min-h-[60vh] content-center gap-5">
+      <section className="guest-state grid min-h-[60vh] content-center gap-5">
+        <GuestStateArtwork kind="session" />
         <h1 className="text-title font-semibold text-text">Your session was lost</h1>
         <p className="max-w-xl text-body text-text-muted">
           This attempt is no longer available in this browser. Start again to receive a new attempt.
         </p>
         <Link
-          className="inline-flex min-h-10 w-fit items-center gap-2 rounded-md border border-primary bg-primary px-4 py-2 text-small font-semibold text-primary-contrast focus-visible:ring-2 focus-visible:ring-focus-ring"
+          className="guest-link inline-flex w-fit items-center gap-2"
           to={"/q/" + token}
         >
           Start again
@@ -235,13 +238,13 @@ export function GuestQuizPage() {
   };
 
   return (
-    <section className="grid gap-5 py-5 pb-28 sm:gap-7 sm:py-10">
+    <section className="guest-quiz grid gap-5 py-5 pb-28 sm:gap-7 sm:py-10" style={{ "--guest-duration-seconds": (attempt.durationMinutes ?? 20) * 60 } as CSSProperties}>
       <header className="grid gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-small font-semibold text-text-muted">
             Hi, {attempt.participantName}
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-3">
             {timer.remainingSeconds !== null ? (
               <Timer
                 isCritical={timer.isCritical}
@@ -280,6 +283,7 @@ export function GuestQuizPage() {
         <div className="flex items-start gap-3 rounded-md border border-danger/40 bg-danger/10 px-3 py-3 text-small text-danger" role="alert">
           <AlertCircle aria-hidden="true" className="mt-0.5 shrink-0" size={17} strokeWidth={1.8} />
           <div className="grid gap-3">
+            {timeLimitError ? <GuestStateArtwork kind="timeout" /> : null}
             <span>{submitError}</span>
             <Button
               className="w-fit"
@@ -301,7 +305,8 @@ export function GuestQuizPage() {
         </div>
       ) : null}
 
-      <Card className="grid gap-6 shadow-raised">
+      <QuestionTransition index={currentIndex}>
+      <Card className="guest-question grid gap-6">
         <div className="grid gap-3">
           <div className="flex items-center justify-between gap-3 text-small text-text-muted">
             <span>{question.marks} {question.marks === 1 ? "mark" : "marks"}</span>
@@ -349,8 +354,9 @@ export function GuestQuizPage() {
           />
         )}
       </Card>
+      </QuestionTransition>
 
-      <div className="sticky bottom-0 z-10 -mx-5 border-t border-border bg-background/95 px-5 py-3 backdrop-blur sm:-mx-8 sm:px-8">
+      <div className="guest-action-bar sticky bottom-0 z-10 border-t border-border">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
           <Button
             icon={<ArrowLeft aria-hidden="true" size={17} strokeWidth={1.8} />}

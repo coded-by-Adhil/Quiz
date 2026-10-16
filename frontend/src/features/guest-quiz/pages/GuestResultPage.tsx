@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AlertCircle, CheckCircle2, ChevronDown, ChevronUp, RotateCcw, XCircle } from "lucide-react";
+import { AlertCircle, CheckCircle2, ChevronDown, ChevronUp, CircleMinus, RotateCcw, XCircle } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Badge } from "@/components/Badge";
 import { Button } from "@/components/Button";
@@ -17,6 +17,8 @@ import {
   setStoredGuestAttempt,
 } from "@/features/guest-quiz/storage";
 import { ScoreSummary } from "@/features/guest-quiz/components/ScoreSummary";
+import { GuestStateArtwork } from "@/features/guest-quiz/components/GuestArtwork";
+import { GuestReveal } from "@/features/guest-quiz/components/GuestMotion";
 import type { GuestBreakdownItem, GuestOption } from "@/features/guest-quiz/types";
 
 function tierMessage(percentage: number): string {
@@ -59,7 +61,7 @@ function OptionList({
   options: GuestOption[];
 }) {
   if (options.length === 0) {
-    return <p className="text-small text-text-muted">{emptyLabel}</p>;
+    return <p className="flex items-center gap-2 text-small text-text-muted"><CircleMinus aria-hidden="true" size={17} />{emptyLabel}</p>;
   }
 
   return (
@@ -139,7 +141,8 @@ export function GuestResultPage() {
     const apiError = normalizeError(resultQuery.error);
 
     return (
-      <section className="grid min-h-[60vh] content-center gap-5">
+      <section className="guest-state grid min-h-[60vh] content-center gap-5">
+        <GuestStateArtwork kind={apiError.status === 404 ? "not-found" : apiError.status === 403 ? "unavailable" : "network"} />
         <Badge variant={apiError.status === 404 ? "warning" : "danger"}>
           {apiError.status === 404 ? "Result not found" : "Could not load"}
         </Badge>
@@ -151,7 +154,7 @@ export function GuestResultPage() {
         </div>
         {apiError.status === 404 ? (
           <Link
-            className="inline-flex min-h-10 w-fit items-center rounded-md border border-primary bg-primary px-4 py-2 text-small font-semibold text-primary-contrast focus-visible:ring-2 focus-visible:ring-focus-ring"
+            className="guest-link inline-flex w-fit items-center"
             to={"/q/" + token}
           >
             Start again
@@ -205,7 +208,7 @@ export function GuestResultPage() {
   };
 
   return (
-    <section className="grid gap-6 py-8 sm:py-14">
+    <section className="guest-result grid gap-6 py-8 sm:py-14">
       <div className="grid gap-2">
         <p className="text-small font-semibold uppercase tracking-[0.1em] text-primary">Complete</p>
         <h1 className="text-title font-semibold text-text">Your result</h1>
@@ -226,8 +229,9 @@ export function GuestResultPage() {
         </div>
       ) : null}
 
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="guest-result-actions flex flex-wrap items-center gap-4">
         <Button
+          aria-expanded={showReview}
           icon={showReview ? <ChevronUp aria-hidden="true" size={17} strokeWidth={1.8} /> : <ChevronDown aria-hidden="true" size={17} strokeWidth={1.8} />}
           onClick={() => setShowReview((current) => !current)}
           variant="secondary"
@@ -244,8 +248,8 @@ export function GuestResultPage() {
         </Button>
       </div>
 
-      {showReview ? (
-        <Card className="grid gap-5">
+      <GuestReveal open={showReview}>
+        <Card className="guest-review grid gap-5">
           <div className="grid gap-1">
             <h2 className="text-heading font-semibold text-text">Answer review</h2>
             <p className="text-small text-text-muted">
@@ -258,7 +262,7 @@ export function GuestResultPage() {
             ))}
           </div>
         </Card>
-      ) : null}
+      </GuestReveal>
     </section>
   );
 }

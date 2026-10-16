@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Check } from "lucide-react";
 
 export interface RadioOption {
   id: number;
@@ -27,6 +28,7 @@ export function RadioGroup({
       <div className="grid gap-2">
         {options.map((option) => (
           <label
+            data-slot="option"
             className={[
               "flex min-h-12 items-start gap-3 rounded-md border border-border bg-surface px-3 py-3 text-small transition-colors duration-fast ease-standard",
               option.disabled
@@ -44,6 +46,7 @@ export function RadioGroup({
               type="radio"
             />
             <span className="min-w-0 flex-1">{option.label}</span>
+            <Check aria-hidden="true" className="guest-option-check hidden" size={20} />
           </label>
         ))}
       </div>

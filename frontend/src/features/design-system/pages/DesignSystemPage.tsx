@@ -34,6 +34,7 @@ import { Tooltip } from "@/components/Tooltip";
 import { ProgressBar } from "@/features/guest-quiz/components/ProgressBar";
 import { ScoreSummary } from "@/features/guest-quiz/components/ScoreSummary";
 import { Timer } from "@/features/guest-quiz/components/Timer";
+import { GuestShowcase } from "./GuestShowcase";
 
 const colorTokens = [
   "background",
@@ -458,11 +459,12 @@ export function DesignSystemPage() {
       <div className="mx-auto grid w-full max-w-7xl gap-8">
         <PageHeader
           actions={<ThemeToggle />}
-          description="Copper Ledger is the shared visual language for guest, admin, and super-admin experiences."
+          description="Copper Ledger for workspaces. Lagoon Play for guest quizzes."
           eyebrow="Design system"
           title="Tokens and components"
         />
         <div className="grid gap-8">
+          <GuestShowcase />
           <ThemePreview theme="light" />
           <ThemePreview theme="dark" />
         </div>

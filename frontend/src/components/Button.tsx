@@ -34,6 +34,7 @@ export function Button({
   return (
     <button
       {...props}
+      data-variant={variant}
       type={type}
       disabled={disabled || loading}
       aria-busy={loading || undefined}

@@ -14,12 +14,12 @@ export function ProgressBar({ current, total }: ProgressBarProps) {
       aria-valuemax={safeTotal}
       aria-valuemin={0}
       aria-valuenow={value}
-      className="h-2 w-full overflow-hidden rounded-full bg-surface-raised"
+      className="guest-progress h-2 w-full overflow-hidden rounded-full bg-surface-raised"
       role="progressbar"
     >
       <div
-        className="h-full rounded-full bg-primary transition-[width] duration-standard ease-standard"
-        style={{ width: `${percentage}%` }}
+        className="h-full origin-left rounded-full bg-primary transition-transform duration-standard ease-standard"
+        style={{ transform: `scaleX(${percentage / 100})` }}
       />
     </div>
   );
