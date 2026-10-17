@@ -6,10 +6,20 @@ export function AdminLayout() {
     <WorkspaceLayout
       accent="admin"
       navItems={[
-        { icon: LayoutDashboard, label: "Quizzes", to: "/admin/quizzes" },
+        {
+          activeWhen: (pathname) => /^\/admin\/quizzes(?:\/(?:new|\d+(?:\/edit)?))?$/.test(pathname),
+          icon: LayoutDashboard,
+          label: "Quizzes",
+          to: "/admin/quizzes",
+        },
         { icon: CircleHelp, label: "Questions", to: "/admin/questions" },
         { icon: Link2, label: "Quiz links", to: "/admin/links" },
-        { icon: BarChart3, label: "Reports", to: "/admin/quizzes" },
+        {
+          activeWhen: (pathname) => pathname === "/admin/reports" || /^\/admin\/quizzes\/\d+\/attempts$/.test(pathname),
+          icon: BarChart3,
+          label: "Reports",
+          to: "/admin/reports",
+        },
       ]}
       roleLabel="Admin workspace"
     />

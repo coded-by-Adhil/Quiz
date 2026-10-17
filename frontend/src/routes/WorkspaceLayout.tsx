@@ -5,12 +5,13 @@ import {
   LogOut,
   type LucideIcon,
 } from "lucide-react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { Button } from "@/components/Button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth } from "@/features/auth/useAuth";
 
 export interface WorkspaceNavItem {
+  activeWhen?: (pathname: string) => boolean;
   icon: LucideIcon;
   label: string;
   to: string;
@@ -52,17 +53,18 @@ export function WorkspaceLayout({
   roleLabel,
 }: WorkspaceLayoutProps) {
   const { logout, user } = useAuth();
+  const location = useLocation();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const colors = accentClasses[accent];
 
   const navigation = (
     <nav aria-label={`${roleLabel} navigation`} className="grid gap-1">
-      {navItems.map(({ icon: Icon, label, to }) => (
+      {navItems.map(({ activeWhen, icon: Icon, label, to }) => (
         <NavLink
           className={({ isActive }) =>
             [
               "flex min-h-10 items-center gap-3 rounded-md px-3 py-2 text-small font-semibold transition-colors duration-fast ease-standard focus-visible:ring-2 focus-visible:ring-focus-ring",
-              isActive
+              (activeWhen ? activeWhen(location.pathname) : isActive)
                 ? colors.active
                 : "text-text-muted hover:bg-surface-raised hover:text-text",
             ].join(" ")

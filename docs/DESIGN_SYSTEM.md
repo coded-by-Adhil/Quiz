@@ -116,6 +116,12 @@ Use `Timer` for a countdown with a fixed deadline managed by the owning feature.
 
 Use `ScoreSummary` for a prominent quiz result. Show the score, percentage, and plain-language tier message together; do not use pass/fail language when the product has not defined a passing threshold.
 
+### SortableColumnHeader and ScoreBar
+
+Use `SortableColumnHeader` for server-sorted reporting columns. It exposes the selected ascending or descending state through the table header and uses an icon as a secondary cue, not the only one. Use `ScoreBar` beside a visible numeric percentage; a zero-mark total is rendered as `-`, never as an invented percentage.
+
+Admin reporting is deliberately aggregate-only. The report interface accepts and renders participant name, score, total marks, and submission time; it must not introduce answer, option, started-time, time-taken, or quiz-link fields.
+
 ### CopyButton
 
 Use `CopyButton` for a compact copy action. Keep the full value outside the button label, provide a tooltip and accessible name, and announce the result through the owning feature's live region and toast.

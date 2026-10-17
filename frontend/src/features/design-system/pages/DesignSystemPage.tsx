@@ -34,6 +34,8 @@ import { Tooltip } from "@/components/Tooltip";
 import { ProgressBar } from "@/features/guest-quiz/components/ProgressBar";
 import { ScoreSummary } from "@/features/guest-quiz/components/ScoreSummary";
 import { Timer } from "@/features/guest-quiz/components/Timer";
+import { ScoreBar } from "@/features/reports/components/ScoreBar";
+import { SortableColumnHeader } from "@/features/reports/components/SortableColumnHeader";
 import { GuestShowcase } from "./GuestShowcase";
 
 const colorTokens = [
@@ -186,6 +188,8 @@ function ComponentSection({ theme }: { theme: "light" | "dark" }) {
   const [switchOn, setSwitchOn] = useState(true);
   const [checkboxOn, setCheckboxOn] = useState(true);
   const [radioId, setRadioId] = useState<number | null>(1);
+  const [reportSort, setReportSort] = useState<"participant_name" | "score">("participant_name");
+  const [reportDirection, setReportDirection] = useState<"asc" | "desc">("asc");
 
   return (
     <div className="grid gap-8 border-t border-border pt-8">
@@ -343,6 +347,55 @@ function ComponentSection({ theme }: { theme: "light" | "dark" }) {
             score={3}
             totalMarks={5}
           />
+        </div>
+      </section>
+
+      <section className="grid gap-4">
+        <h4 className="font-mono text-label font-semibold uppercase tracking-[0.1em] text-primary">
+          Reporting controls
+        </h4>
+        <div className="overflow-hidden rounded-md border border-border bg-surface">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <SortableColumnHeader
+                  direction={reportDirection}
+                  onSort={(sort, direction) => {
+                    setReportSort(sort);
+                    setReportDirection(direction);
+                  }}
+                  sort={reportSort}
+                  sortKey="participant_name"
+                >
+                  Participant
+                </SortableColumnHeader>
+                <SortableColumnHeader
+                  direction={reportDirection}
+                  onSort={(sort, direction) => {
+                    setReportSort(sort);
+                    setReportDirection(direction);
+                  }}
+                  sort={reportSort}
+                  sortKey="score"
+                >
+                  Score
+                </SortableColumnHeader>
+                <TableHead>Percent</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell className="font-semibold">Jordan Lee</TableCell>
+                <TableCell className="font-mono">8 / 10</TableCell>
+                <TableCell><ScoreBar score={8} totalMarks={10} /></TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-semibold">Alex Morgan</TableCell>
+                <TableCell className="font-mono">0 / 0</TableCell>
+                <TableCell><ScoreBar score={0} totalMarks={0} /></TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
       </section>
 

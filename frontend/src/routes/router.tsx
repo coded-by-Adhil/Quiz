@@ -15,6 +15,8 @@ import { QuizCreatePage } from "@/features/quizzes/pages/QuizCreatePage";
 import { QuizDetailPage } from "@/features/quizzes/pages/QuizDetailPage";
 import { QuizEditPage } from "@/features/quizzes/pages/QuizEditPage";
 import { QuizListPage } from "@/features/quizzes/pages/QuizListPage";
+import { ReportListPage } from "@/features/reports/pages/ReportListPage";
+import { QuizAttemptsPage } from "@/features/reports/pages/QuizAttemptsPage";
 import { StatusPage } from "@/features/status/pages/StatusPage";
 import { AdminLayout } from "@/routes/AdminLayout";
 import { AuthLayout } from "@/routes/AuthLayout";
@@ -79,13 +81,11 @@ export const router = createBrowserRouter([
                   { element: <QuestionEditPage />, path: "admin/questions/:id/edit" },
                   { element: <LinkManagementPage />, path: "admin/links" },
                   { element: <QuizListPage />, path: "admin/quizzes" },
+                  { element: <ReportListPage />, path: "admin/reports" },
                   { element: <QuizCreatePage />, path: "admin/quizzes/new" },
                   { element: <QuizDetailPage />, path: "admin/quizzes/:id" },
                   { element: <QuizEditPage />, path: "admin/quizzes/:id/edit" },
-                  {
-                    element: <AuthenticatedPlaceholderPage />,
-                    path: "admin/quizzes/:id/attempts",
-                  },
+                  { element: <QuizAttemptsPage />, path: "admin/quizzes/:id/attempts" },
                 ],
               },
             ],
