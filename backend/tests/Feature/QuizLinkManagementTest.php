@@ -58,14 +58,15 @@ class QuizLinkManagementTest extends TestCase
     {
         $admin = $this->authenticateAsAdmin();
         $quiz = $this->createQuiz($admin);
-        $question = $this->createQuestion($admin);
-        $this->attachQuestions($quiz, [$question]);
+        $firstQuestion = $this->createQuestion($admin, 'First link question');
+        $secondQuestion = $this->createQuestion($admin, 'Second link question');
+        $this->attachQuestions($quiz, [$firstQuestion, $secondQuestion]);
 
         $firstResponse = $this->postJson('/api/admin/quizzes/'.$quiz->id.'/links', [
-            'question_ids' => [$question->id],
+            'question_ids' => [$firstQuestion->id],
         ])->assertCreated();
         $secondResponse = $this->postJson('/api/admin/quizzes/'.$quiz->id.'/links', [
-            'question_ids' => [$question->id],
+            'question_ids' => [$secondQuestion->id],
         ])->assertCreated();
 
         $this->assertNotSame(
@@ -73,6 +74,70 @@ class QuizLinkManagementTest extends TestCase
             $secondResponse->json('token')
         );
         $this->assertDatabaseCount('quiz_links', 2);
+    }
+
+    public function test_create_rejects_an_active_duplicate_question_set_regardless_of_order(): void
+    {
+        $admin = $this->authenticateAsAdmin();
+        $quiz = $this->createQuiz($admin);
+        $firstQuestion = $this->createQuestion($admin, 'First duplicate question');
+        $secondQuestion = $this->createQuestion($admin, 'Second duplicate question');
+        $thirdQuestion = $this->createQuestion($admin, 'Third duplicate question');
+        $this->attachQuestions($quiz, [$firstQuestion, $secondQuestion, $thirdQuestion]);
+        $questionIds = [$firstQuestion->id, $secondQuestion->id, $thirdQuestion->id];
+
+        $firstResponse = $this->postJson('/api/admin/quizzes/'.$quiz->id.'/links', [
+            'question_ids' => $questionIds,
+        ])->assertCreated();
+        $existingLinkId = $firstResponse->json('id');
+
+        foreach ([$questionIds, array_reverse($questionIds)] as $duplicateQuestionIds) {
+            $duplicateResponse = $this->postJson('/api/admin/quizzes/'.$quiz->id.'/links', [
+                'question_ids' => $duplicateQuestionIds,
+            ]);
+
+            $duplicateResponse->assertUnprocessable()
+                ->assertExactJson([
+                    'message' => 'An active link with the same questions already exists for this quiz.',
+                    'errors' => [
+                        'question_ids' => [
+                            'An active link with the same questions already exists for this quiz.',
+                        ],
+                    ],
+                    'existing_link_id' => $existingLinkId,
+                ]);
+        }
+
+        $this->assertDatabaseCount('quiz_links', 1);
+    }
+
+    public function test_create_allows_a_subset_and_replacement_of_an_inactive_duplicate_link(): void
+    {
+        $admin = $this->authenticateAsAdmin();
+        $quiz = $this->createQuiz($admin);
+        $firstQuestion = $this->createQuestion($admin, 'First replacement question');
+        $secondQuestion = $this->createQuestion($admin, 'Second replacement question');
+        $thirdQuestion = $this->createQuestion($admin, 'Third replacement question');
+        $this->attachQuestions($quiz, [$firstQuestion, $secondQuestion, $thirdQuestion]);
+        $allQuestionIds = [$firstQuestion->id, $secondQuestion->id, $thirdQuestion->id];
+
+        $firstLink = $this->postJson('/api/admin/quizzes/'.$quiz->id.'/links', [
+            'question_ids' => $allQuestionIds,
+        ])->assertCreated();
+
+        $this->postJson('/api/admin/quizzes/'.$quiz->id.'/links', [
+            'question_ids' => [$firstQuestion->id, $secondQuestion->id],
+        ])->assertCreated();
+
+        $this->patchJson('/api/admin/links/'.$firstLink->json('id'), [
+            'is_active' => false,
+        ])->assertOk();
+
+        $this->postJson('/api/admin/quizzes/'.$quiz->id.'/links', [
+            'question_ids' => array_reverse($allQuestionIds),
+        ])->assertCreated();
+
+        $this->assertDatabaseCount('quiz_links', 3);
     }
 
     public function test_create_rejects_a_quiz_with_no_attached_questions(): void

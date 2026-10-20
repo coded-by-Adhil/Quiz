@@ -17,10 +17,22 @@ class QuizLinkController extends Controller
         $this->authorize('create', [QuizLink::class, $quiz]);
 
         $questionIds = $request->validated()['question_ids'];
+        $existingLinkId = null;
 
-        $quizLink = DB::transaction(function () use ($quiz, $questionIds): QuizLink {
+        $quizLink = DB::transaction(function () use ($quiz, $questionIds, &$existingLinkId): ?QuizLink {
+            $lockedQuiz = Quiz::query()
+                ->lockForUpdate()
+                ->findOrFail($quiz->id);
+            $duplicateLink = $this->findActiveDuplicateLink($lockedQuiz, $questionIds);
+
+            if ($duplicateLink !== null) {
+                $existingLinkId = $duplicateLink->id;
+
+                return null;
+            }
+
             $quizLink = new QuizLink();
-            $quizLink->quiz_id = $quiz->id;
+            $quizLink->quiz_id = $lockedQuiz->id;
             $quizLink->token = $this->generateToken();
             $quizLink->is_active = true;
             $quizLink->save();
@@ -35,6 +47,16 @@ class QuizLinkController extends Controller
 
             return $quizLink->load('questions');
         });
+
+        if ($existingLinkId !== null) {
+            $message = 'An active link with the same questions already exists for this quiz.';
+
+            return response()->json([
+                'message' => $message,
+                'errors' => ['question_ids' => [$message]],
+                'existing_link_id' => $existingLinkId,
+            ], 422);
+        }
 
         return response()->json($quizLink, 201);
     }
@@ -71,5 +93,35 @@ class QuizLinkController extends Controller
         } while (QuizLink::query()->where('token', $token)->exists());
 
         return $token;
+    }
+
+    /**
+     * @param  list<int>  $questionIds
+     */
+    private function findActiveDuplicateLink(Quiz $quiz, array $questionIds): ?QuizLink
+    {
+        $normalizedQuestionIds = $this->normalizeQuestionIds($questionIds);
+
+        return QuizLink::query()
+            ->where('quiz_id', $quiz->id)
+            ->where('is_active', true)
+            ->with('questions:id')
+            ->orderBy('id')
+            ->get()
+            ->first(function (QuizLink $link) use ($normalizedQuestionIds): bool {
+                return $this->normalizeQuestionIds($link->questions->pluck('id')->all())
+                    === $normalizedQuestionIds;
+            });
+    }
+
+    /**
+     * @param  list<int>  $questionIds
+     * @return list<int>
+     */
+    private function normalizeQuestionIds(array $questionIds): array
+    {
+        sort($questionIds);
+
+        return $questionIds;
     }
 }
