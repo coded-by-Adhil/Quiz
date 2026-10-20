@@ -150,6 +150,12 @@ Use `Spinner` for an active operation and `Skeleton` for a layout-preserving loa
 
 Use badges for compact status or classification. Available variants are neutral, success, warning, danger, and info. Pair color with text and, where useful, an icon.
 
+For platform accounts, use the approved badge with a check icon and the not-approved badge with a clock icon. Do not describe an approval state through color alone.
+
+### StatCard
+
+Use `StatCard` for compact, platform-level totals. Pair one large, formatted number with a clear label and a familiar Lucide icon. It is for concise dashboard measurements, not a substitute for a data table or chart.
+
 ### EmptyState
 
 Use an icon, a short title, one sentence of explanation, and one next action. Empty states should make the next useful step obvious without becoming marketing copy.
@@ -165,6 +171,8 @@ Use the hand-written toast provider for short-lived feedback. Toast variants are
 ### Dialog
 
 Use the native `dialog` component for focused decisions and confirmations. It traps Tab focus, closes on Escape, provides a labelled close button, and must not be used for routine page content.
+
+Use the approval confirmation layout before suspending an admin. State that suspension signs the admin out immediately, offer a secondary Cancel action, and use a danger-styled confirmation action.
 
 ### Table and Pagination
 

@@ -25,7 +25,8 @@ class QuizController extends Controller
         $direction = $validated['direction'] ?? 'asc';
 
         $query = Quiz::query()
-            ->where('owner_id', auth()->id());
+            ->where('owner_id', auth()->id())
+            ->withCount(['questions', 'links']);
 
         if (! empty($validated['search'] ?? null)) {
             $query->where('title', 'like', '%'.$validated['search'].'%');

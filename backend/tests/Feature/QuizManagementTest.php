@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Question;
 use App\Models\Quiz;
+use App\Models\QuizLink;
 use App\Models\User;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -134,6 +135,45 @@ class QuizManagementTest extends TestCase
             ->assertJsonPath('data.0.id', $ownQuiz->id)
             ->assertJsonMissing(['title' => 'Deleted quiz'])
             ->assertJsonMissing(['title' => 'Other admin quiz']);
+    }
+
+    public function test_quiz_list_includes_question_and_link_counts_without_n_plus_one_queries(): void
+    {
+        $admin = $this->authenticateAsAdmin();
+        $emptyQuiz = $this->createQuiz($admin, 'Empty quiz');
+        $populatedQuiz = $this->createQuiz($admin, 'Populated quiz');
+        $extraQuizOne = $this->createQuiz($admin, 'Extra quiz one');
+        $extraQuizTwo = $this->createQuiz($admin, 'Extra quiz two');
+        $firstQuestion = $this->createQuestion($admin, 'First attached question');
+        $secondQuestion = $this->createQuestion($admin, 'Second attached question');
+
+        $populatedQuiz->questions()->sync([
+            $firstQuestion->id => ['order' => 0],
+            $secondQuestion->id => ['order' => 1],
+        ]);
+        $link = new QuizLink();
+        $link->quiz_id = $populatedQuiz->id;
+        $link->token = 'inactive-link-count-test';
+        $link->is_active = false;
+        $link->save();
+
+        $queries = [];
+        DB::listen(function (QueryExecuted $query) use (&$queries): void {
+            $queries[] = $query->sql;
+        });
+
+        $response = $this->getJson('/api/admin/quizzes?sort=title&direction=asc');
+
+        $response->assertOk();
+        $quizzesById = collect($response->json('data'))->keyBy('id');
+
+        $this->assertSame(0, $quizzesById[$emptyQuiz->id]['questions_count']);
+        $this->assertSame(0, $quizzesById[$emptyQuiz->id]['links_count']);
+        $this->assertSame(2, $quizzesById[$populatedQuiz->id]['questions_count']);
+        $this->assertSame(1, $quizzesById[$populatedQuiz->id]['links_count']);
+        $this->assertArrayHasKey($extraQuizOne->id, $quizzesById->all());
+        $this->assertArrayHasKey($extraQuizTwo->id, $quizzesById->all());
+        $this->assertLessThanOrEqual(3, count($queries));
     }
 
     public function test_admin_can_view_own_quiz_with_ordered_questions_and_options(): void

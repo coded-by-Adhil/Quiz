@@ -25,6 +25,7 @@ import { SearchInput } from "@/components/SearchInput";
 import { Select } from "@/components/Select";
 import { Skeleton } from "@/components/Skeleton";
 import { Spinner } from "@/components/Spinner";
+import { StatCard } from "@/components/StatCard";
 import { Switch } from "@/components/Switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/Table";
 import { Textarea } from "@/components/Textarea";
@@ -34,6 +35,7 @@ import { Tooltip } from "@/components/Tooltip";
 import { ProgressBar } from "@/features/guest-quiz/components/ProgressBar";
 import { ScoreSummary } from "@/features/guest-quiz/components/ScoreSummary";
 import { Timer } from "@/features/guest-quiz/components/Timer";
+import { AdminStatusBadge } from "@/features/superadmin/components/AdminStatusBadge";
 import { ScoreBar } from "@/features/reports/components/ScoreBar";
 import { SortableColumnHeader } from "@/features/reports/components/SortableColumnHeader";
 import { GuestShowcase } from "./GuestShowcase";
@@ -303,6 +305,21 @@ function ComponentSection({ theme }: { theme: "light" | "dark" }) {
         </div>
       </section>
 
+      <section className="grid gap-4">
+        <h4 className="font-mono text-label font-semibold uppercase tracking-[0.1em] text-primary">
+          Platform oversight
+        </h4>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <StatCard icon={<Users size={20} strokeWidth={1.8} />} label="Total admins" value="12" />
+          <StatCard icon={<CheckCircle2 size={20} strokeWidth={1.8} />} label="Approved admins" value="7" />
+          <StatCard icon={<AlertTriangle size={20} strokeWidth={1.8} />} label="Pending approval" value="5" />
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <AdminStatusBadge isApproved />
+          <AdminStatusBadge isApproved={false} />
+        </div>
+      </section>
+
       <section className="grid gap-4 md:grid-cols-2">
         <div className="grid gap-4">
           <h4 className="font-mono text-label font-semibold uppercase tracking-[0.1em] text-primary">
@@ -434,18 +451,16 @@ function ComponentSection({ theme }: { theme: "light" | "dark" }) {
           <span className="text-small text-text-muted">Escape closes it and Tab stays inside.</span>
         </div>
         <Dialog
-          description="This preview uses the native dialog element with a local focus trap."
+          description="Suspend Taylor Morgan? They will be signed out immediately and can't sign in until you approve them again."
           onClose={() => setDialogOpen(false)}
           open={dialogOpen}
-          title="Review component state"
+          title="Suspend admin"
         >
           <div className="grid gap-4">
             <p className="text-small text-text-muted">
-              The dialog is intentionally reserved for focused decisions and confirmation work.
+              The confirmation layout is reserved for destructive account actions.
             </p>
-            <Button onClick={() => setDialogOpen(false)} variant="secondary">
-              Close dialog
-            </Button>
+            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><Button onClick={() => setDialogOpen(false)} variant="secondary">Cancel</Button><Button onClick={() => setDialogOpen(false)} variant="danger">Suspend admin</Button></div>
           </div>
         </Dialog>
       </section>

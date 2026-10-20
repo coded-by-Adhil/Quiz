@@ -58,6 +58,10 @@ export function usePaginatedListUrlState<TSort extends string>({
   };
 
   return {
+    baseParams: useMemo(
+      () => ({ page, ...(search ? { search } : {}) }),
+      [page, search],
+    ),
     direction,
     page,
     search,

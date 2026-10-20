@@ -19,6 +19,8 @@ class AdminQuizResource extends JsonResource
             'description' => $this->description,
             'duration_minutes' => $this->duration_minutes,
             'created_at' => $this->created_at,
+            'questions_count' => (int) $this->questions_count,
+            'links_count' => (int) $this->links_count,
         ];
     }
 }

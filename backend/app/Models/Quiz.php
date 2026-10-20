@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Quiz extends Model
@@ -44,5 +45,10 @@ class Quiz extends Model
         return $this->belongsToMany(Question::class, 'quiz_questions')
             ->withPivot('order')
             ->orderByPivot('order');
+    }
+
+    public function links(): HasMany
+    {
+        return $this->hasMany(QuizLink::class);
     }
 }

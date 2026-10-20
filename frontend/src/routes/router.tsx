@@ -1,6 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/features/auth/AuthContext";
-import { AuthenticatedPlaceholderPage } from "@/features/auth/pages/AuthenticatedPlaceholderPage";
 import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { RegisterPage } from "@/features/auth/pages/RegisterPage";
 import { DesignSystemPage } from "@/features/design-system/pages/DesignSystemPage";
@@ -17,6 +16,9 @@ import { QuizEditPage } from "@/features/quizzes/pages/QuizEditPage";
 import { QuizListPage } from "@/features/quizzes/pages/QuizListPage";
 import { ReportListPage } from "@/features/reports/pages/ReportListPage";
 import { QuizAttemptsPage } from "@/features/reports/pages/QuizAttemptsPage";
+import { SuperAdminAdminDetailPage } from "@/features/superadmin/pages/SuperAdminAdminDetailPage";
+import { SuperAdminAdminListPage } from "@/features/superadmin/pages/SuperAdminAdminListPage";
+import { SuperAdminDashboardPage } from "@/features/superadmin/pages/SuperAdminDashboardPage";
 import { StatusPage } from "@/features/status/pages/StatusPage";
 import { AdminLayout } from "@/routes/AdminLayout";
 import { AuthLayout } from "@/routes/AuthLayout";
@@ -101,13 +103,13 @@ export const router = createBrowserRouter([
               {
                 element: <SuperAdminLayout />,
                 children: [
-                  { element: <AuthenticatedPlaceholderPage />, path: "superadmin" },
+                  { element: <SuperAdminDashboardPage />, path: "superadmin" },
                   {
-                    element: <AuthenticatedPlaceholderPage />,
+                    element: <SuperAdminAdminListPage />,
                     path: "superadmin/admins",
                   },
                   {
-                    element: <AuthenticatedPlaceholderPage />,
+                    element: <SuperAdminAdminDetailPage />,
                     path: "superadmin/admins/:id",
                   },
                 ],
